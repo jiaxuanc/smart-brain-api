@@ -2,6 +2,17 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
+const db = require('knex')({
+	client: 'pg',
+  connection: {
+    host : '127.0.0.1',
+    user : 'jiaxuanchen',
+    password : '',
+    database : 'smart-brain'
+  }
+})
+
+console.log(db.select('*').from('smart-brain'));
 
 const app = express();
 
@@ -30,7 +41,6 @@ const database = {
 			hash: '',
 			email: 'john@gmail.com'
 		}
-
 	]
 }
 
@@ -44,7 +54,7 @@ app.get('/', (req, res) => {
 app.post('/signin', (req, res) => {
 	if (req.body.email === database.users[0].email &&
 			req.body.password === database.users[0].password)
-		{ res.json('success'); }
+		{ res.json(database.users[0]); }
 	else { res.status(400).json('error logging in'); }
 })
 
