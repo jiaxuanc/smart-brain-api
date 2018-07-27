@@ -12,7 +12,9 @@ const db = require('knex')({
   }
 })
 
-console.log(db.select('*').from('smart-brain'));
+db.select('*').from('users').then (data => {
+	console.log(data);
+});
 
 const app = express();
 
@@ -63,15 +65,17 @@ app.post('/register', (req, res) => {
 	bcrypt.hash(password, null, null, function(err, hash) {
     console.log(hash);
 	});
-	database.users.push({
-			id: "125",
+	db('users')
+		.returning('*')
+		.insert({
 			name: name,
 			email: email,
-			password: password,
-			entries: 0,
-			joined: new Date(),
-	});
-	res.json(database.users[database.users.length-1]);
+			joined: new Date()
+		})
+		.then(user=> {
+			res.json(user[0]);
+		})
+		.catch(err => res.status(400).json('unable to register'))
 })
 
 app.get('/profile/:id', (req,res) => {
