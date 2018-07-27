@@ -5,10 +5,8 @@ const cors = require('cors');
 const db = require('knex')({
 	client: 'pg',
   connection: {
-    host : 'postgresql-globular-31512',
-    user : 'jiaxuanchen',
-    password : '',
-    database : 'smart-brain'
+    host : process.env.DATABASE_URL,
+    ssl: true,
   }
 });
 
